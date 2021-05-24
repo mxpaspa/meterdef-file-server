@@ -23,35 +23,43 @@ func returnCode200(w http.ResponseWriter, r *http.Request) {
 
 func getMeterdefs(w http.ResponseWriter, r *http.Request){
 
-	var out []byte
+	// var out []byte
 
+	// entries, err := ioutil.ReadDir(path)
+	// if err != nil {
+	// 	log.Panicf("failed reading directory: %s", err)
+	// }
+
+	// for _,fs := range entries {
+	// 	fileName := fmt.Sprintf("%s/%s",path,fs.Name())
+	// 	dat, err := ioutil.ReadFile(fileName)
+	// 	if err != nil {
+	// 		log.Panicf("failed reading file: %s", err)
+	// 	}
+
+	// 	out = append(out, dat...)
+	// }
 	path := "./meterdefs"
-	entries, err := ioutil.ReadDir(path)
+	name := r.URL.Path[len("/get/"):]
+	fileName := fmt.Sprintf("%s/%s.yaml",path,name)
+	dat, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		log.Panicf("failed reading directory: %s", err)
+		log.Panicf("failed reading file: %s", err)
 	}
 
-	for _,fs := range entries {
-		fileName := fmt.Sprintf("%s/%s",path,fs.Name())
-		dat, err := ioutil.ReadFile(fileName)
-		if err != nil {
-			log.Panicf("failed reading file: %s", err)
-		}
-
-		out = append(out, dat...)
-	}
-
-	fmt.Println(string(out))
+	fmt.Println(string(dat))
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(out))
+
+	w.Write([]byte(dat))
 }
 
 func main() {
 	port := flag.String("p", "8100", "port to serve on")
 	directory := flag.String("d", "./meterdefs", "the directory of static file to host")
+
 	flag.Parse()
 
-	http.HandleFunc("/", getMeterdefs)
+	http.HandleFunc("/get/", getMeterdefs)
 	http.HandleFunc("/healthz",returnCode200)
 	http.HandleFunc("/readyz",returnCode200)
 
