@@ -27,6 +27,7 @@ func main() {
 
 	http.Handle("/", http.FileServer(http.Dir(*directory)))
 	http.HandleFunc("/healthz",returnCode200)
+	http.HandleFunc("/readyz",returnCode200)
 
 	log.Printf("Serving %s on HTTP port: %s\n", *directory, *port)
 	log.Fatal(http.ListenAndServe(":"+*port, nil))
