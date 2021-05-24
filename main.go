@@ -43,7 +43,7 @@ func getMeterdefs(w http.ResponseWriter, r *http.Request){
 
 	fmt.Println(string(out))
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(string(out)))
+	w.Write([]byte(out))
 }
 
 func main() {
