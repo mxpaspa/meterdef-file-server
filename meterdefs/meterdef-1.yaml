@@ -1,7 +1,7 @@
 apiVersion: marketplace.redhat.com/v1beta1
 kind: MeterDefinition
 metadata:
-  name: meterdef-2
+  name: meterdef-1
   namespace: openshift-redhat-marketplace
 spec:
   group: marketplace.redhat.com 
