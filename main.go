@@ -10,14 +10,40 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 func returnCode200(w http.ResponseWriter, r *http.Request) {
-	// see http://golang.org/pkg/net/http/#pkg-constants
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("200"))
+}
+
+func getMeterdefs(w http.ResponseWriter, r *http.Request){
+
+	var out []byte
+
+	path := "./meterdefs"
+	entries, err := ioutil.ReadDir(path)
+	if err != nil {
+		log.Panicf("failed reading directory: %s", err)
+	}
+
+	for _,fs := range entries {
+		fileName := fmt.Sprintf("%s/%s",path,fs.Name())
+		dat, err := ioutil.ReadFile(fileName)
+		if err != nil {
+			log.Panicf("failed reading file: %s", err)
+		}
+
+		out = append(out, dat...)
+	}
+
+	fmt.Println(string(out))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(out))
 }
 
 func main() {
@@ -25,7 +51,7 @@ func main() {
 	directory := flag.String("d", "./meterdefs", "the directory of static file to host")
 	flag.Parse()
 
-	http.Handle("/", http.FileServer(http.Dir(*directory)))
+	http.HandleFunc("/", getMeterdefs)
 	http.HandleFunc("/healthz",returnCode200)
 	http.HandleFunc("/readyz",returnCode200)
 
