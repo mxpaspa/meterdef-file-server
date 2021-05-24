@@ -14,13 +14,23 @@ import (
 	"net/http"
 )
 
+func returnCode200(w http.ResponseWriter, r *http.Request) {
+	// see http://golang.org/pkg/net/http/#pkg-constants
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("200"))
+}
+
 func main() {
 	port := flag.String("p", "8100", "port to serve on")
 	directory := flag.String("d", "./meterdefs", "the directory of static file to host")
 	flag.Parse()
 
 	http.Handle("/", http.FileServer(http.Dir(*directory)))
+	http.HandleFunc("/healthz",returnCode200)
 
 	log.Printf("Serving %s on HTTP port: %s\n", *directory, *port)
 	log.Fatal(http.ListenAndServe(":"+*port, nil))
 }
+
+
+
