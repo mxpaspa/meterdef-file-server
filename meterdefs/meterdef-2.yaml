@@ -1,0 +1,20 @@
+apiVersion: marketplace.redhat.com/v1beta1
+kind: MeterDefinition
+metadata:
+  name: meter-def-2
+  namespace: openshift-redhat-marketplace
+spec:
+  group: marketplace.redhat.com 
+  kind: Pod 
+  resourceFilters:
+    - workloadType: Pod
+      label:
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: rhm-metric-state
+  meters:
+    - aggregation: sum
+      period: 15m
+      workloadType: Pod
+      query:  kube_pod_info{} or on() vector(0)
+      metricId:  "kube_pod_info{} or on() vector(0)"
