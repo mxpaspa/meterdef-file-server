@@ -1,0 +1,30 @@
+apiVersion: marketplace.redhat.com/v1beta1
+kind: MeterDefinition
+metadata:
+  name: robin-meterdef
+  namespace: openshift-redhat-marketplace
+  annotations: 
+    "versionRange": "0.0.1 - 1.4.5"
+    "packageName" : "<INSERT PACKAGE NAME>"
+spec:
+  group: robinclusters.robin.io
+  installedBy:
+    name: robin-storage-enterprise.v5.3.4-156
+    namespace: robin-tutorial
+  kind: RobinCluster
+  meters:
+    - aggregation: avg
+      metricId: node_hour2
+      name: pod_node
+      period: 1h0m0s
+      query: >-
+        min_over_time((kube_pod_info{created_by_kind="DaemonSet",created_by_name="robin",node=~".*"}
+        or on() vector(0))[60m:60m])
+      workloadType: Pod
+  resourceFilters:
+    - namespace:
+        useOperatorGroup: true
+      ownerCRD:
+        apiVersion: manage.robin.io/v1
+        kind: RobinCluster
+      workloadType: Pod

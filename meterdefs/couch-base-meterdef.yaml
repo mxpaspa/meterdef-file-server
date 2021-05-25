@@ -1,0 +1,31 @@
+apiVersion: marketplace.redhat.com/v1beta1
+kind: MeterDefinition
+metadata:
+  name: joget-meterdef
+  namespace: openshift-redhat-marketplace
+  annotations: 
+    "versionRange": "0.0.1 - 1.4.5"
+    "packageName" : "<INSERT PACKAGE NAME>"
+spec:
+  group: couchbase.com
+  kind: CouchbaseCluster
+  meters:
+    - aggregation: sum
+      groupBy:
+        - namespace
+      metricId: couchbase_cluster_count
+      period: 1h0m0s
+      query: >-
+        kube_service_labels{namespace="openshift-redhat-marketplace",label_couchbase_cluster=~".+",service=~".+-ui"}
+      without:
+        - label_couchbase_cluster
+        - label_app
+        - label_operator_couchbase_com_version
+      workloadType: Service
+  resourceFilters:
+    - namespace:
+        useOperatorGroup: true
+      ownerCRD:
+        apiVersion: couchbase.com/v2
+        kind: CouchbaseCluster
+      workloadType: Service

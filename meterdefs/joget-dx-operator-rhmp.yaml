@@ -1,0 +1,23 @@
+apiVersion: marketplace.redhat.com/v1beta1
+kind: MeterDefinition
+metadata:
+  name: joget-meterdef
+  namespace: openshift-redhat-marketplace
+  annotations: 
+    "versionRange": "0.0.1 - 1.4.5"
+    "packageName" : "joget-dx-operator-rhmp"
+spec:
+  group: marketplace.redhat.com 
+  kind: Pod 
+  resourceFilters:
+    - workloadType: Pod
+      label:
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: rhm-metric-state
+  meters:
+    - aggregation: sum
+      period: 15m
+      workloadType: Pod
+      query:  kube_pod_info{} or on() vector(0)
+      metricId:  "kube_pod_info{} or on() vector(0)"
