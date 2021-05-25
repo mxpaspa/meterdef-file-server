@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-redhat-marketplace
   annotations: 
     "versionRange": "0.0.1 - 1.4.5"
-    "packageName" : "joget-dx-operator-rhmp"
+    "packageName": "joget-dx-operator-rhmp"
 spec:
   group: marketplace.redhat.com 
   kind: Pod 
