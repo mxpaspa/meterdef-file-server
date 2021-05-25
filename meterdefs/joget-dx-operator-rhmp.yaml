@@ -1,7 +1,7 @@
 apiVersion: marketplace.redhat.com/v1beta1
 kind: MeterDefinition
 metadata:
-  name: joget-meterdef
+  name: joget-meterdef-from-file-server
   namespace: openshift-redhat-marketplace
   annotations: 
     "versionRange": "0.0.1 - 1.4.5"
